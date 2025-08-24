@@ -4,11 +4,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useThemeStore } from "@/stores/theme";
+import {
+  useSaveUserPreferences,
+  useUserPreferences,
+} from "@/hooks/user-preferences";
+import { Theme, useThemeStore } from "@/stores/theme";
 import { Sun, Moon, Monitor } from "lucide-react";
+import { useEffect } from "react";
 
 export function ThemeToggleAdvanced() {
-  const { theme, setTheme, getEffectiveTheme } = useThemeStore();
+  const userPreferences = useUserPreferences();
+  const saveUserPreferences = useSaveUserPreferences();
+
+  const { getEffectiveTheme, theme, setTheme } = useThemeStore();
   const effectiveTheme = getEffectiveTheme();
 
   const themes = [
@@ -16,6 +24,10 @@ export function ThemeToggleAdvanced() {
     { value: "dark" as const, label: "Dark", icon: Moon },
     { value: "system" as const, label: "System", icon: Monitor },
   ];
+  useEffect(() => {
+    if (!userPreferences) return;
+    setTheme(userPreferences.theme as Theme);
+  }, [userPreferences]);
 
   return (
     <Popover>
@@ -24,7 +36,7 @@ export function ThemeToggleAdvanced() {
           size="icon"
           variant="ghost"
           className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white border border-white/30"
-          title={`Current theme: ${theme} (${effectiveTheme})`}
+          title={`Current theme: ${userPreferences?.theme} (${effectiveTheme})`}
         >
           {effectiveTheme === "dark" ? (
             // Sun icon for dark mode
@@ -45,8 +57,16 @@ export function ThemeToggleAdvanced() {
             return (
               <Button
                 key={themeOption.value}
-                onClick={() => setTheme(themeOption.value)}
-                variant={theme === themeOption.value ? "default" : "ghost"}
+                onClick={() =>
+                  void saveUserPreferences({
+                    preferences: { theme: themeOption.value },
+                  })
+                }
+                variant={
+                  userPreferences?.theme === themeOption.value
+                    ? "default"
+                    : "ghost"
+                }
                 className="w-full justify-start text-sm"
               >
                 <IconComponent className="w-4 h-4 mr-2" />

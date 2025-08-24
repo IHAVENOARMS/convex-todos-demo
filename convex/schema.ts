@@ -16,4 +16,8 @@ export default defineSchema({
     .index("by_user_priorty", ["userId", "priority"])
     .index("by_user_name", ["userId", "name"])
     .index("by_user", ["userId"]),
+  userPreferences: defineTable({
+    theme: v.union(v.literal("light"), v.literal("dark"), v.literal("system")),
+    userId: v.id("users"),
+  }).index("by_user", ["userId"]),
 });

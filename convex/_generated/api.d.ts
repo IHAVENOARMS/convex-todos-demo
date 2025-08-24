@@ -15,7 +15,10 @@ import type {
 } from "convex/server";
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
+import type * as models_auth from "../models/auth.js";
+import type * as models_userpreferences from "../models/userpreferences.js";
 import type * as todos from "../todos.js";
+import type * as user from "../user.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -28,7 +31,10 @@ import type * as todos from "../todos.js";
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   http: typeof http;
+  "models/auth": typeof models_auth;
+  "models/userpreferences": typeof models_userpreferences;
   todos: typeof todos;
+  user: typeof user;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

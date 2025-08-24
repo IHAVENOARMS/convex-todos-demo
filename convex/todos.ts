@@ -7,7 +7,7 @@ export const getTodos = query({
     sortBy: v.optional(
       v.union(v.literal("date"), v.literal("priority"), v.literal("name")),
     ),
-    order: v.optional(v.union(v.literal('asc'), v.literal('desc')))
+    order: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
