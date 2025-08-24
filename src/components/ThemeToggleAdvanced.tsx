@@ -16,7 +16,7 @@ export function ThemeToggleAdvanced() {
   const userPreferences = useUserPreferences();
   const saveUserPreferences = useSaveUserPreferences();
 
-  const { getEffectiveTheme, theme, setTheme } = useThemeStore();
+  const { getEffectiveTheme, setTheme } = useThemeStore();
   const effectiveTheme = getEffectiveTheme();
 
   const themes = [
