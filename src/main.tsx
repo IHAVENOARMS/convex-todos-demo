@@ -9,8 +9,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@fontsource-variable/inter"; // Defaults to wght axis
 
 import "./index.css";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import {
+  RouterProvider,
+  createBrowserHistory,
+  createHashHistory,
+  createRouter,
+} from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
+import { isInElectron } from "./utils/is-in-electron";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 const convexQueryClient = new ConvexQueryClient(convex);
@@ -23,10 +29,14 @@ const queryClient = new QueryClient({
   },
 });
 
-// Create a new router instance
-const router = createRouter({ routeTree });
+//Decide on which history to use based on environment
+//so that electron doesn't break
+const history = isInElectron(window)
+  ? createHashHistory()
+  : createBrowserHistory();
 
-// Register the router instance for type safety
+const router = createRouter({ routeTree, history });
+
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;

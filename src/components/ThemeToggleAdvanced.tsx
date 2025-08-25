@@ -16,7 +16,7 @@ export function ThemeToggleAdvanced() {
   const userPreferences = useUserPreferences();
   const saveUserPreferences = useSaveUserPreferences();
 
-  const { getEffectiveTheme, setTheme } = useThemeStore();
+  const { getEffectiveTheme, setTheme, theme } = useThemeStore();
   const effectiveTheme = getEffectiveTheme();
 
   const themes = [
@@ -36,7 +36,7 @@ export function ThemeToggleAdvanced() {
           size="icon"
           variant="ghost"
           className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white border border-white/30"
-          title={`Current theme: ${userPreferences?.theme} (${effectiveTheme})`}
+          title={`Current theme: ${theme} (${effectiveTheme})`}
         >
           {effectiveTheme === "dark" ? (
             // Sun icon for dark mode
@@ -57,16 +57,16 @@ export function ThemeToggleAdvanced() {
             return (
               <Button
                 key={themeOption.value}
-                onClick={() =>
+                onClick={() => {
+                  if (!userPreferences) {
+                    setTheme(themeOption.value);
+                    return;
+                  }
                   void saveUserPreferences({
                     preferences: { theme: themeOption.value },
-                  })
-                }
-                variant={
-                  userPreferences?.theme === themeOption.value
-                    ? "default"
-                    : "ghost"
-                }
+                  });
+                }}
+                variant={theme === themeOption.value ? "default" : "ghost"}
                 className="w-full justify-start text-sm"
               >
                 <IconComponent className="w-4 h-4 mr-2" />

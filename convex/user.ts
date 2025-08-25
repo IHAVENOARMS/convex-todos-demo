@@ -6,9 +6,14 @@ import { v } from "convex/values";
 export const getUserPreferences = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await Auth.assertUserIsLoggedIn(ctx);
-    const preferences = await UserPreferences.getUserPreferences(ctx, userId);
-    return preferences ? { theme: preferences.theme } : { theme: "system" };
+    const defaultPreferences = { theme: "system" };
+    try {
+      const userId = await Auth.assertUserIsLoggedIn(ctx);
+      const preferences = await UserPreferences.getUserPreferences(ctx, userId);
+      return preferences ? { theme: preferences.theme } : defaultPreferences;
+    } catch (exc) {
+      return null;
+    }
   },
 });
 
